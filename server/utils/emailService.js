@@ -1,52 +1,42 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
+
+// Initialize SendGrid with API Key
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || process.env.EMAIL_PASS);
 
 const sendCertificateEmail = async (email, studentName, certificateId, pdfBuffer) => {
-    // Flexible Transporter (Works with Gmail, SendGrid, Mailgun etc.)
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-        port: Number(process.env.EMAIL_PORT) || 465,
-        secure: true, // true for 465, false for other ports
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
-
-    const mailOptions = {
-        from: `"${process.env.EMAIL_NAME || 'CertifyHub'}" <${process.env.EMAIL_FROM || 'no-reply@certifyhub.com'}>`,
+    const msg = {
         to: email,
+        from: process.env.EMAIL_FROM || 'punpunsaurabh2002@gmail.com',
         subject: `Your Internship Certificate - ${certificateId}`,
-        text: `Congratulations ${studentName}! Your internship certificate is ready. Attachment: ${certificateId}.pdf`,
+        text: `Congratulations ${studentName}! Your internship certificate is ready.`,
+        html: `
+            <h2>Congratulations ${studentName}!</h2>
+            <p>Your internship certificate is ready.</p>
+            <p><strong>Certificate ID:</strong> ${certificateId}</p>
+            <p>Please find your certificate attached.</p>
+        `,
         attachments: [
             {
+                content: pdfBuffer.toString('base64'),
                 filename: `Certificate_${certificateId}.pdf`,
-                content: pdfBuffer
+                type: 'application/pdf',
+                disposition: 'attachment'
             }
         ]
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        await sgMail.send(msg);
         console.log(`Email sent to ${email}`);
     } catch (err) {
-        console.error('Email sending failed:', err);
+        console.error('Email sending failed:', err.response ? err.response.body : err);
     }
 };
 
 const sendPasswordResetEmail = async (email, resetLink) => {
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-        port: Number(process.env.EMAIL_PORT) || 465,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
-
-    const mailOptions = {
-        from: `"${process.env.EMAIL_NAME || 'CertifyHub Security'}" <${process.env.EMAIL_FROM || 'no-reply@certifyhub.com'}>`,
+    const msg = {
         to: email,
+        from: process.env.EMAIL_FROM || 'punpunsaurabh2002@gmail.com',
         subject: 'Password Reset Request',
         html: `
             <h3>Reset Your Password</h3>
@@ -58,10 +48,10 @@ const sendPasswordResetEmail = async (email, resetLink) => {
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        await sgMail.send(msg);
         console.log(`Reset email sent to ${email}`);
     } catch (err) {
-        console.error('Reset email sending failed:', err);
+        console.error('Reset email sending failed:', err.response ? err.response.body : err);
     }
 };
 
