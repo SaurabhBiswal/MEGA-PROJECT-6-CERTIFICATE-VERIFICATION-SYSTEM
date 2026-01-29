@@ -13,6 +13,8 @@ import Navbar from './components/Navbar';
 
 import ResetPassword from './pages/ResetPassword';
 
+import PublicProfile from './pages/PublicProfile';
+
 function App() {
   return (
     <AuthProvider>
@@ -22,6 +24,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/verify/:id" element={<Verify />} />
+            <Route path="/student/public/:id" element={<PublicProfile />} />
             <Route path="/admin/login" element={<Login />} />
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/student/login" element={<StudentLogin />} />

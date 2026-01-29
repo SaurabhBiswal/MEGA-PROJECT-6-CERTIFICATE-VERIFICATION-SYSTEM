@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 import { Award, Download, ExternalLink, Calendar, Briefcase, Share2 } from 'lucide-react';
 
 const StudentPortfolio = () => {
@@ -33,12 +34,23 @@ const StudentPortfolio = () => {
         window.open(shareUrl, '_blank');
     };
 
+    const { user } = useContext(AuthContext);
+
     const handleShare = async () => {
-        try {
-            await navigator.clipboard.writeText(window.location.href);
-            alert('Profile link copied to clipboard!');
-        } catch (err) {
-            console.error('Failed to copy link');
+        // Use user.id from context if available, otherwise fallback (though this page requires login)
+        const shareId = user?.id;
+
+        if (shareId) {
+            const clientUrl = import.meta.env.VITE_CLIENT_URL || window.location.origin;
+            const shareUrl = `${clientUrl}/student/public/${shareId}`;
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                alert('Public Profile link copied to clipboard!');
+            } catch (err) {
+                console.error('Failed to copy link');
+            }
+        } else {
+            alert('Could not find user ID. Please try logging in again.');
         }
     };
 

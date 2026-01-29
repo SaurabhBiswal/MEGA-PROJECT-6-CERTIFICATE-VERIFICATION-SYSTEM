@@ -82,7 +82,7 @@ router.post('/google-login', async (req, res) => {
 
 
         const jwtToken = jwt.sign({ id: student._id, role: 'student' }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
-        res.json({ token: jwtToken, student: { name: student.name, email: student.email } });
+        res.json({ token: jwtToken, student: { id: student._id, name: student.name, email: student.email } });
     } catch (err) {
         res.status(500).json({ error: 'Google authentication failed' });
     }
@@ -159,7 +159,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
         const token = jwt.sign({ id: student._id, role: 'student' }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
-        res.json({ token, student: { name: student.name, email: student.email } });
+        res.json({ token, student: { id: student._id, name: student.name, email: student.email } });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -194,6 +194,21 @@ router.get('/me', async (req, res) => {
         res.json(student.certificates);
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+});
+
+// Public Profile Route
+router.get('/public/:id', async (req, res) => {
+    try {
+        const student = await Student.findById(req.params.id).select('-password -__v');
+        if (!student) {
+            return res.status(404).json({ error: 'Student not found' });
+        }
+        const certificates = await Certificate.find({ studentEmail: student.email });
+        res.json({ student, certificates });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 

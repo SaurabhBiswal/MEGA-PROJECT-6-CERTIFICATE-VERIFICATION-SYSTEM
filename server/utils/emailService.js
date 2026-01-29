@@ -1,11 +1,11 @@
 const nodemailer = require('nodemailer');
 
 const sendCertificateEmail = async (email, studentName, certificateId, pdfBuffer) => {
+    // Flexible Transporter (Works with Gmail, SendGrid, Mailgun etc.)
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true, // Use SSL
+        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+        port: Number(process.env.EMAIL_PORT) || 465,
+        secure: true, // true for 465, false for other ports
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
@@ -13,7 +13,7 @@ const sendCertificateEmail = async (email, studentName, certificateId, pdfBuffer
     });
 
     const mailOptions = {
-        from: '"CertifyHub" <no-reply@certifyhub.com>',
+        from: `"${process.env.EMAIL_NAME || 'CertifyHub'}" <${process.env.EMAIL_FROM || 'no-reply@certifyhub.com'}>`,
         to: email,
         subject: `Your Internship Certificate - ${certificateId}`,
         text: `Congratulations ${studentName}! Your internship certificate is ready. Attachment: ${certificateId}.pdf`,
@@ -35,9 +35,8 @@ const sendCertificateEmail = async (email, studentName, certificateId, pdfBuffer
 
 const sendPasswordResetEmail = async (email, resetLink) => {
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        port: 465,
+        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+        port: Number(process.env.EMAIL_PORT) || 465,
         secure: true,
         auth: {
             user: process.env.EMAIL_USER,
@@ -46,7 +45,7 @@ const sendPasswordResetEmail = async (email, resetLink) => {
     });
 
     const mailOptions = {
-        from: '"CertifyHub Security" <no-reply@certifyhub.com>',
+        from: `"${process.env.EMAIL_NAME || 'CertifyHub Security'}" <${process.env.EMAIL_FROM || 'no-reply@certifyhub.com'}>`,
         to: email,
         subject: 'Password Reset Request',
         html: `
