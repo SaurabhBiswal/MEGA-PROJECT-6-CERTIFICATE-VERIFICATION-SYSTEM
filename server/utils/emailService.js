@@ -7,7 +7,10 @@ sgMail.setApiKey(apiKey);
 const sendCertificateEmail = async (email, studentName, certificateId, pdfBuffer) => {
     const msg = {
         to: email,
-        from: process.env.EMAIL_FROM || 'punpunsaurabh2002@gmail.com',
+        from: {
+            email: process.env.EMAIL_FROM || 'punpunsaurabh2002@gmail.com',
+            name: process.env.EMAIL_NAME || 'CertifyHub'
+        },
         subject: `Your Internship Certificate - ${certificateId}`,
         text: `Congratulations ${studentName}! Your internship certificate is ready.`,
         html: `
@@ -37,7 +40,10 @@ const sendCertificateEmail = async (email, studentName, certificateId, pdfBuffer
 const sendPasswordResetEmail = async (email, resetLink) => {
     const msg = {
         to: email,
-        from: process.env.EMAIL_FROM || 'punpunsaurabh2002@gmail.com',
+        from: {
+            email: process.env.EMAIL_FROM || 'punpunsaurabh2002@gmail.com',
+            name: process.env.EMAIL_NAME || 'CertifyHub Security'
+        },
         subject: 'Password Reset Request',
         html: `
             <h3>Reset Your Password</h3>
