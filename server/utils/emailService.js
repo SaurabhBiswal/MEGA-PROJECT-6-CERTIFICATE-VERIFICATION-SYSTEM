@@ -2,7 +2,10 @@ const nodemailer = require('nodemailer');
 
 const sendCertificateEmail = async (email, studentName, certificateId, pdfBuffer) => {
     const transporter = nodemailer.createTransport({
-        service: 'gmail', // Use a dedicated service or SMTP in production
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, // Use SSL
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
@@ -33,6 +36,9 @@ const sendCertificateEmail = async (email, studentName, certificateId, pdfBuffer
 const sendPasswordResetEmail = async (email, resetLink) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
