@@ -1,7 +1,8 @@
 const sgMail = require('@sendgrid/mail');
 
-// Initialize SendGrid with API Key
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || process.env.EMAIL_PASS);
+// Initialize SendGrid with API Key (trim to remove any whitespace/newlines)
+const apiKey = (process.env.SENDGRID_API_KEY || process.env.EMAIL_PASS || '').trim();
+sgMail.setApiKey(apiKey);
 
 const sendCertificateEmail = async (email, studentName, certificateId, pdfBuffer) => {
     const msg = {
