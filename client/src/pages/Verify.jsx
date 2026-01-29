@@ -29,8 +29,8 @@ const Verify = () => {
     };
 
     const handleLinkedInShare = () => {
-        const text = `Verified Certificate: I've completed an internship in ${cert.internshipDomain} at CertifyHub! ID: ${cert.certificateId}`;
-        const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
+        const clientUrl = import.meta.env.VITE_CLIENT_URL || window.location.origin;
+        const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(clientUrl + "/verify/" + id)}`;
         window.open(shareUrl, '_blank');
     };
 

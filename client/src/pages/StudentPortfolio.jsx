@@ -26,7 +26,8 @@ const StudentPortfolio = () => {
     };
 
     const handleLinkedInShare = (cert) => {
-        const url = `http://localhost:5173/verify/${cert.certificateId}`;
+        const clientUrl = import.meta.env.VITE_CLIENT_URL || window.location.origin;
+        const url = `${clientUrl}/verify/${cert.certificateId}`;
         const text = `I'm proud to share that I have successfully completed an internship in ${cert.internshipDomain} at CertifyHub! Verified certificate ID: ${cert.certificateId}`;
         const shareUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text + " " + url)}`;
         window.open(shareUrl, '_blank');
