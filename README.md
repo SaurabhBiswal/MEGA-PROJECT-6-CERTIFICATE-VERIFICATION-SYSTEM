@@ -185,6 +185,13 @@ npm run dev
 ```
 
 4. **Access the application**
+
+**🌐 Live Production URLs:**
+- **Frontend:** https://mega-project-6-certificate-verifica.vercel.app
+- **Backend API:** https://mega-project-6-certificate-verification.onrender.com
+- **Swagger Docs:** https://mega-project-6-certificate-verification.onrender.com/api-docs
+
+**💻 Local Development URLs:**
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:5000
 - Swagger Docs: http://localhost:5000/api-docs
