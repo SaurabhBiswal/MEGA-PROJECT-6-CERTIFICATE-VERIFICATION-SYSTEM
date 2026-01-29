@@ -204,7 +204,7 @@ router.get('/public/:id', async (req, res) => {
         if (!student) {
             return res.status(404).json({ error: 'Student not found' });
         }
-        const certificates = await Certificate.find({ studentEmail: student.email });
+        const certificates = await Certificate.find({ email: student.email });
         res.json({ student, certificates });
     } catch (err) {
         console.error(err);
